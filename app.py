@@ -11,53 +11,36 @@ print(random.randint(0,1000))
 st.title("🦜🔗 Rating Summary")
 st.write('This is a demo of the Rating Summary app. The app is currently under development.')
 
+num_ratings = 15
+num_cols = 5
+
 def get_feedback():
     print('processing')
-    res = f"Rating 1: {rating1}, Rating 2: {rating2}, Rating 3: {rating3}, Rating 4: {rating4}, Rating 5: {rating5}, Rating 6: {rating6}, Rating 7: {rating7}, Rating 8: {rating8}, Rating 9: {rating9}, Rating 10: {rating10}, Other observations: {other_obv}"
+    res = data
     return res
 
+
 def clear_text():
-    st.session_state["rating1"] = 0
-    st.session_state["rating2"] = 0
-    st.session_state["rating3"] = 0
-    st.session_state["rating4"] = 0
-    st.session_state["rating5"] = 0
-    st.session_state["rating6"] = 0
-    st.session_state["rating7"] = 0
-    st.session_state["rating8"] = 0
-    st.session_state["rating9"] = 0
-    st.session_state["rating10"] = 0
+    for key in data.keys():
+        if key == 'other_obv':
+            continue
+        st.session_state[key] = 0
     st.session_state["other_obv"] = ''
 
+data = {}
 
 with st.form(key='my_form'):
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        rating1 = st.number_input('Insert rating 1', min_value=0, max_value=10, value=0, step=1, key='rating1')
-    with col2:
-        rating2 = st.number_input('Insert rating 2', min_value=0, max_value=10, value=0, step=1, key='rating2')
-    with col3:
-        rating3 = st.number_input('Insert rating 3', min_value=0, max_value=10, value=0, step=1, key='rating3')
-    with col4:
-        rating4 = st.number_input('Insert rating 4', min_value=0, max_value=10, value=0, step=1, key='rating4')
-    with col5:
-        rating5 = st.number_input('Insert rating 5', min_value=0, max_value=10, value=0, step=1, key='rating5')
+    cols = st.columns(num_cols)
 
-    col1, col2, col3, col4, col5 = st.columns(5)
+    for i in range(1, num_ratings+1):
+        col = cols[(i % num_cols) -1]
+        with col:
+            data[f'rating{i}'] = st.number_input(f'Insert rating {i}', min_value=0, max_value=10, value=0, step=1, key=f'rating{i}')
 
-    with col1:
-        rating6 = st.number_input('Insert rating 6', min_value=0, max_value=10, value=0, step=1, key='rating6')
-    with col2:
-        rating7 = st.number_input('Insert rating 7', min_value=0, max_value=10, value=0, step=1, key='rating7')
-    with col3:
-        rating8 = st.number_input('Insert rating 8', min_value=0, max_value=10, value=0, step=1, key='rating8')
-    with col4:
-        rating9 = st.number_input('Insert rating 9', min_value=0, max_value=10, value=0, step=1, key='rating9')
-    with col5:
-        rating10 = st.number_input('Insert rating 10', min_value=0, max_value=10, value=0, step=1, key='rating10')
- 
+        if i % num_cols==0:
+            cols = st.columns(num_cols)
 
-    other_obv = st.text_area('Other observations:', key='other_obv')
+    data['other_obv'] = st.text_area('Other observations:', key='other_obv')
 
     # st.form_submit_button(label='Submit', on_click=get_feedback)
     submit_button = st.form_submit_button(label='Submit')
