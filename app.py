@@ -92,25 +92,58 @@ if submit_button:
     res_block = st.empty()
     res_block.write('processing...')
     res = get_feedback()
-    res_block.write(res)
+    # res_block.write(res)
 
 
 # st.button("clear text input", on_click=clear_text)
+sample = {
+        "Critical Thinking": {
+            "Information and Discovery": 2,
+            "Interpretation and Analysis": 3,
+            "Reasoning": 2,
+            "Problem-solving/ Solution finding": 2,
+            "Self-reflection": 2
+        },
+        "Creativity": {
+            "Idea Generation and Expression": 2,
+            "Openness and Courage to explore": 4,
+            "Creative Production and Innovation": 1,
+            "Self-Reflection/Agency": 2
+        },
+        "Collaboration": {
+            "Responsibility and Initiative": 2,
+            "Cooperation, Flexibility and Responsiveness": 3,
+            "Common goal or shared purpose": 3,
+            "Self-Reflection/ Agency": 3
+        },
+        "Communication": {
+            "Being Clear, Complete, Concise &Confident": 2,
+            "Listening & Feedback": 3,
+            "Trust building": 2,
+            "Self reflection": 2
+        }
+    }
 
-prompt = """You are a leadership instructor and you have just finished an assessment. You want to give feedback to your students. The feedback is based on the rubrics below. \n
-            You can rate each criterion from 1 to 4. \n
-            1 means the student is not good at this criterion, 4 means the student is very good at this criterion. \n
+
+prompt = """You are a leadership instructor and you have just finished an assessment. You want to give feedback to the students' parents.
+            The students have been rated based of fixed set of rubrics with each criterion rated between 1 and 4.
+            1 means 'Novice', 2 means 'Emerging', 3 means 'Proficient', 4 means 'Exemplary'
+
             You should provide two outputs: Assessment of Leadership (What the student is good at) and Assessment for Leadership (what are the things student can improve). 
-            You only have the abovementioned information about the student. Nothing else. \n
-            About the student: \n
-            Name: {name} \n
-            Gender: {gender} \n
-            RUBRICS and SCORES:{data} \n
-            Here is an example of feedback:
-            Assessment of Leadership: Sharayu displays utmost commitment to his team and always envisions the end-result of collaborative work. He consistently fulfills roles and responsibilities with little prompting, monitors progress of group's efforts and communicates well with his team.
-            Assessment for Leadership: Sharayu can enhance his critical thinking skills by actively engaging in the analysis and planning part of solving a problem. Exercises like brainstorming, creating story boards for academic as well as extra-curricular projects in a group setting would enhance his problem solving skills. Assuming positions of leadership would add to his leadership experience and further enhance his confidence in sharing his ideas openly.
-            """.format(name= 'Karan', gender='Male', data=data)
+            You can only use the information provided as part of the input, nothing else.
+
+            Here is an example where student is a male named `Sharayu`. You can refer this but don't use the same feeback for all students.
+            The score are delimited by four hash symbols.
+            ####{sample}####
+            And here is feedback provided by the instructor, delimited by four hash symbols.
+            #### Assessment of Leadership: Sharayu displays utmost commitment to his team and always envisions the end-result of collaborative work. He consistently fulfills roles and responsibilities with little prompting, monitors progress of group's efforts and communicates well with his team.
+            Assessment for Leadership: Sharayu can enhance his critical thinking skills by actively engaging in the analysis and planning part of solving a problem. Exercises like brainstorming, creating story boards for academic as well as extra-curricular projects in a group setting would enhance his problem solving skills. Assuming positions of leadership would add to his leadership experience and further enhance his confidence in sharing his ideas openly. ####
+            Here is the scores of the student for which you have to generate feedback, delimited by tripple backticks.
+            ```{data}```
+            About the student: Name: {name}, Gender: {gender}
+            """.format(name= 'Karan', gender='Male', data=data, sample=sample)
 st.write(repr(prompt))
+# st.write(data)
 
 
 MAX_OUTPUT_LENGHT = 100
